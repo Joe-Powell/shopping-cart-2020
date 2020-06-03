@@ -1,273 +1,282 @@
-let carts = document.querySelectorAll('.add-cart');
- 
+let addCartBtn = document.querySelectorAll('.add-cart');
 
 let products = [
-    { 
-        name: 'Phone 1',
-        tag: 'phone1',
+    {
+        name: 'Citrulline',
+        tag: 'citrulline',
         price: 15,
         inCart: 0
     },
     {
-        name: 'Phone 2',
-        tag: 'phone2',
-        price: 85,
+        name: 'Creatine',
+        tag: 'creatine',
+        price: 25,
         inCart: 0
     },
     {
-        name: 'Phone 3',
-        tag: 'phone3',
-       price: 95,
+        name: 'Fish Oil',
+        tag: 'fishoil',
+        price: 20,
         inCart: 0
     },
     {
-        name: 'Phone 4',
-        tag: 'phone4',
-        price: 75,
+        name: 'Whey Protein',
+        tag: 'wheyprotein',
+        price: 35,
         inCart: 0
     },
     {
-        name: 'Phone 5',
-        tag: 'phone5',
-        price: 55,
+        name: 'Plant Protein',
+        tag: 'plantprotein',
+        price: 45,
         inCart: 0
     }
 
 ];
 
-        // this loop grabs all the .add-cart elements ex. cart[1] cart[2]...
-        // as long as i is less than carts.length it will ++
-for (let i=0; i < carts.length; i++) {
 
-    carts[i].addEventListener('click', () => {
-        // console.log('added to cart');
+for (let i = 0; i < addCartBtn.length; i++) {
+    addCartBtn[i].addEventListener('click', () => {
         cartNumbers(products[i]);
         totalCost(products[i]);
-
     })
 
 }
 
-   /* this function will make sure that even if you refresh page,
-   you will still have items in shopping cart invoked at bottom of page..  */
+// onLoadNumbers makes sure that when refresh the page it keeps the totalItems in blue cart button
+function onLoadCartNumbers() {
+    let productNumbers = localStorage.getItem('totalItems');
 
-        function onLoadCartNumbers() {
-            let productNumbers = localStorage.getItem('cartNumbers');
-            
-            if (productNumbers){
-            document.querySelector('.cart span').textContent= productNumbers;
-            }
-        }
-
-
-
-
-
-function cartNumbers(product) {
-    // console.log(' Inside cartNumbers the product clicked is', product);
-    let productNumbers = localStorage.getItem('cartNumbers');
-    // console.log(productNumbers);
-    // console.log(typeof productNumbers);
-    productNumbers = parseInt(productNumbers);
-    // console.log(typeof productNumbers);
-
-   
-    document.querySelector('.cart span').textContent=1;
-    if(productNumbers) {
-        localStorage.setItem('cartNumbers', productNumbers + 1);
-        document.querySelector('.cart span').textContent= productNumbers + 1;
-
-    }else{
-        localStorage.setItem('cartNumbers',  1)
-
+    if (productNumbers) {
+        document.querySelector('.cart span').textContent = productNumbers;
     }
+}
 
-    setItems(product)
 
+// cartNumbers updates the quantity of all items in localstorage and blue cart button
+function cartNumbers(product, action) {
+    let productNumbers = localStorage.getItem('totalItems');
+    productNumbers = parseInt(productNumbers);
+
+
+    let productsInCart = localStorage.getItem('productsInCart');
+    productsInCart = JSON.parse(productsInCart);
+
+    if (action == 'decrease') {
+        localStorage.setItem('totalItems', productNumbers - 1);
+        document.querySelector('.cart span').textContent = productNumbers - 1;
+    } else if (productNumbers) {
+        localStorage.setItem('totalItems', productNumbers + 1);
+        document.querySelector('.cart span').textContent = productNumbers + 1;
+
+    } else {
+        localStorage.setItem('totalItems', + 1)
+        document.querySelector('.cart span').textContent = 1;
+    }
+    setItems(product);
 
 }
 
 
+// tells you which item was clicked on and how many 
 function setItems(product) {
-    let cartItems = localStorage.getItem('productsInCart');
-     cartItems = JSON.parse(cartItems);
-    // console.log('Inside of setItems My Product is', product);
-    // console.log('My cart Items are', cartItems);
-    
-    if(cartItems != null){
-        if(cartItems[product.tag] == undefined){
-            cartItems  = {
-                // rest operator ... will update cartItems add new product
-                ...cartItems,
+    let productsInCart = localStorage.getItem('productsInCart');
+    productsInCart = JSON.parse(productsInCart);
+
+    if (productsInCart != null) {
+        if (productsInCart[product.tag] == undefined) {
+            //upates productsInCart and  ... productsInCart pushes watever was in your productsInCart from before line 78 which is the productsInCart
+            productsInCart = {
+                ...productsInCart,
                 [product.tag]: product
             }
         }
-        cartItems[product.tag].inCart += 1;
-    }else{
-    product.inCart = 1;
-     cartItems = {
-        [product.tag]: product
+        productsInCart[product.tag].inCart += 1;
+
+    } else {
+        product.inCart = 1;
+        productsInCart = {
+            [product.tag]: product
+        }
+
+
     }
-}
-    localStorage.setItem('productsInCart', JSON.stringify(cartItems) );
+
+    localStorage.setItem('productsInCart', JSON.stringify(productsInCart))
 
 
 }
 
-function totalCost(product) {
-    //console.log("the product price is", product.price);
 
-    // you need to get the totalCost and put in variable named cartCost
-    
+
+// calculates total cost 
+function totalCost(product, action) {
+    // console.log("the product price is", product.price)
     let cartCost = localStorage.getItem('totalCost');
-    
 
+    console.log('my CartCost is', cartCost);
+    console.log(typeof cartCost);
 
-    //     console.log('my CartCost is', cartCost );
-            //   console.log(typeof cartCost);
-              // gets parsed to number only if cart has something inside already
-
-        /* != null meaning that if the totalCost is Not EMPTY so it does have
-         contents. The reason we parse below instead of above is because it's
-          only when the cart is not empty... */
-       if(cartCost != null){
-       cartCost = parseInt(cartCost);
-        // console.log(typeof cartCost);
-            localStorage.setItem('totalCost', cartCost + product.price )
-       } else {
+    if (action == 'decrease') {
+        cartCost = parseInt(cartCost);
+        localStorage.setItem('totalCost', cartCost - product.price)
+    } else if (cartCost != null) {
+        cartCost = parseInt(cartCost);
+        localStorage.setItem('totalCost', cartCost + product.price)
+    } else {
         cartCost = parseInt(cartCost);
         // console.log(typeof cartCost);
         localStorage.setItem('totalCost', product.price);
 
-       }      
+    }
+
+
+
 
 }
+
+
+
 
 function displayCart() {
-    let cartItems = localStorage.getItem('productsInCart');
-    cartItems = JSON.parse(cartItems);
-        let productContainer = document.querySelector('.products');
-        let cartCost = localStorage.getItem('totalCost');
+    let productsInCart = localStorage.getItem('productsInCart');
+    productsInCart = JSON.parse(productsInCart);
+    let productContainer = document.querySelector('.products');
+    let cartCost = localStorage.getItem('totalCost');
 
-        if(cartItems && productContainer ) {
-            productContainer.innerHTML= '';
-            Object.values(cartItems).map(item => {
-                productContainer.innerHTML += `
+
+    if (productsInCart && productContainer) {
+        productContainer.innerHTML = '';
+
+        Object.values(productsInCart).map(item => {
+            productContainer.innerHTML += `
                 <div class='product'>
-                <ion-icon name="close-circle-outline"></ion-icon>
-                <img src='./images/${item.tag}.jpg'>
-                <span>${item.name}</span>
-                </div>
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                    <img src='./images/${item.tag}.jpg'>
+                    <span>${item.name}</span>
+
+               </div>
                 <div class='price'>$${item.price}.00</div>
                 <div class = 'quantity'>
-                <ion-icon class='decrease'name="arrow-back-circle-outline"></ion-icon>   
-                <span>${item.inCart}</span>
-                <ion-icon class='increase' name="arrow-forward-circle-outline"></ion-icon>
+                    <ion-icon class='decrease'name="arrow-back-circle-outline"></ion-icon>   
+                    <span>${item.inCart}</span>
+                    <ion-icon class='increase' name="arrow-forward-circle-outline"></ion-icon>
                 </div>
                 <div class='total'>
-                $${item.inCart * item.price}.00
+                     $${item.inCart * item.price}.00
                 </div> 
 
-                `; 
-            }) 
-            productContainer.innerHTML += `
-             <div class = 'basketTotalContainer'>
-                 <h4 class='basketTotalTitle'>
-                 Basket Total
-                 </h4>
-                  <h4 class='basketTotal'>
-                     $${cartCost}.00
-                  </h4>
-            
-            
-             </div>
-        `;
-            
-        }
+                `;
+        })
+
+        productContainer.innerHTML += `
+        <div class = 'basketTotalContainer'>
+            <h4 class='basketTotalTitle'>
+            Basket Total
+            </h4>
+             <h4 class='basketTotal'>
+                $${cartCost}.00
+             </h4>
+       </div>
+   `;
 
 
-            // deleteButtons has an event listener in the function for when you click on the delete buttonwithin the function
-            deleteButtons();
-            manageQuantity(); 
+        // sets up event listener on deleteButtons .product ion-icon the for loop which could just be put in here too
+        deleteButtons();
+        manageQuantity();
+    }
+
+    productContainer.innerHTML += `
+        <div style='color:white; ' class = 'helloWorld'>
+             g
+       </div>
+   `;
+
+
 }
 
 
-//////// delete button
- function deleteButtons(){
-     let deleteButtons = document.querySelectorAll('.product ion-icon');
-     let productName;
-     let productNumbers = localStorage.getItem('cartNumbers');
-     let cartItems = localStorage.getItem('productsInCart')
-      cartItems = JSON.parse(cartItems);
-     let cartCost = localStorage.getItem('totalCost');
+function deleteButtons() {
+    let deleteButtons = document.querySelectorAll('.product ion-icon');
+    let productName;
+    let totalItems = localStorage.getItem('totalItems');
+    let productsInCart = localStorage.getItem('productsInCart');
+    productsInCart = JSON.parse(productsInCart);
+    let totalCost = localStorage.getItem('totalCost');
 
 
-    for(let i=0; i < deleteButtons.length; i++) {
+    for (let i = 0; i < deleteButtons.length; i++) {
         deleteButtons[i].addEventListener('click', () => {
-        // console.log('clicked');
+            //  goes into the parent and grabs the textContent which is the span..
+            // this updates the local storage and cart display 
+            productName = deleteButtons[i].parentElement.textContent.trim().toLowerCase().replace(/ /g, '');
 
-        productName = deleteButtons[i].parentElement.textContent.trim().toLowerCase().replace(/ /g, '');
-        console.log(productName);
-        console.log('we have  '+ productNumbers+ ' total products in cart' );
-            console.log(cartItems[productName].name + ' had ' + cartItems[productName].inCart+ ' in cart');
-         localStorage.setItem('cartNumbers', productNumbers - cartItems[productName].inCart);
-            localStorage.setItem('totalCost', cartCost - (cartItems[productName].price  * cartItems[productName].inCart ));
+            localStorage.setItem('totalItems', totalItems - productsInCart[productName].inCart);
+            localStorage.setItem('totalCost', totalCost - (productsInCart[productName].price * productsInCart[productName].inCart));
 
-            delete cartItems[productName];
-            localStorage.setItem('productsInCart', JSON.stringify(cartItems));
+            delete productsInCart[productName];
+            localStorage.setItem('productsInCart', JSON.stringify(productsInCart));
 
             displayCart();
             onLoadCartNumbers();
         })
     }
 
+
 }
 
-// increasing and decreasing product quantities 
+
 function manageQuantity() {
     let decreaseButtons = document.querySelectorAll('.decrease');
     let increaseButtons = document.querySelectorAll('.increase');
-    let cartItems = localStorage.getItem('productsInCart');
-    cartItems = JSON.parse(cartItems);
-    let currentQuantity = 0;
+    let productsInCart = localStorage.getItem('productsInCart');
+    productsInCart = JSON.parse(productsInCart);
+    let currentQuantity;  // made this variable to catch the quantity, made it globlly so can use in both increase and decrease
     currentProduct = "";
-   
-   
-    for(let i=0; i < decreaseButtons.length; i++) {
+
+
+
+    for (let i = 0; i < decreaseButtons.length; i++) {
         decreaseButtons[i].addEventListener('click', () => {
-        currentQuantity = decreaseButtons[i].parentElement.querySelector('span').textContent;
-        console.log(currentQuantity);
-        // this below currentProduct grabs the span 2 elements up inside product
-        currentProduct = decreaseButtons[i].parentElement.previousElementSibling.previousElementSibling.querySelector('span').textContent.toLowerCase().replace(/ /g, '').trim();
-        console.log(currentProduct);
+            currentQuantity = decreaseButtons[i].parentElement.querySelector('span').textContent;
+            currentProduct = decreaseButtons[i].parentElement.previousElementSibling.previousElementSibling.querySelector('span').textContent.toLowerCase().replace(/ /g, '').trim();
 
-        if(cartItems[currentProduct].inCart > 1) {
-            cartItems[currentProduct].inCart = cartItems[currentProduct].inCart - 1;
+            if (productsInCart[currentProduct].inCart > 1) {
 
-        //pass updated cartItems into productsInCart 
-        localStorage.setItem('productsInCart', JSON.stringify(cartItems));
+                productsInCart[currentProduct].inCart = productsInCart[currentProduct].inCart - 1;
+                cartNumbers(productsInCart[currentProduct], 'decrease');
+                totalCost(productsInCart[currentProduct], 'decrease')
 
-        // call displayCart so page is re-rendered
-        displayCart();
+                localStorage.setItem('productsInCart', JSON.stringify(productsInCart));
+
+                displayCart(); // to re-render the cart page kind of like to refresh
             }
-        });
-
+        })
     }
 
-    for(let i=0; i < increaseButtons.length; i++) {
+
+    for (let i = 0; i < increaseButtons.length; i++) {
         increaseButtons[i].addEventListener('click', () => {
             currentQuantity = increaseButtons[i].parentElement.querySelector('span').textContent;
-            console.log(currentQuantity);
+
+            currentProduct = increaseButtons[i].parentElement.previousElementSibling.previousElementSibling.querySelector('span').textContent.toLowerCase().replace(/ /g, '').trim();
+
+
+
+            productsInCart[currentProduct].inCart = productsInCart[currentProduct].inCart + 1;
+            cartNumbers(productsInCart[currentProduct]);
+            totalCost(productsInCart[currentProduct]);
+
+            localStorage.setItem('productsInCart', JSON.stringify(productsInCart));
+
+            displayCart(); // to re-render the cart page kind of like to refresh
+
         })
 
+
     }
+
 }
 
-
-
-
-
-// whenever we load the page, this onLoadCartNumbers() is going to run
 onLoadCartNumbers();
-displayCart();
-
+displayCart() 
