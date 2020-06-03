@@ -3,20 +3,20 @@
     padding:0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+    /* background-color: lightseagreen; */
 }
 
 header{
 
-    background-image: url('images/phone1.jpg');
+    background-image: url('http://s0.yellowpages.com.au/1fbdb7c7-5fac-4dbc-97bf-bc0b3d9a892b/wicked-nrg-supplements-nutrition-stuart-park-0820-image.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-
-    height:150px;
-     position: relative; 
+    height:130px;
+    position: relative; 
 }
 
-.overlay{
+/* .overlay{
     position: absolute;
     z-index: 1;
     top:0;
@@ -24,11 +24,11 @@ header{
     height:100%;
     right:0;
     bottom:0;
-    padding:0 !important;
-    margin:0 !important;
+    padding:0 ;
+    margin:0 ;
     background-color: rgba(10,10,10, 0.3);
 
-}
+} */
 
 nav{
     position: absolute;
@@ -41,6 +41,10 @@ nav{
     justify-content: space-between;
     padding: 50px 60px 0 60px;
 
+}
+
+nav h2 {
+    color:white;
 }
 
 nav li {
@@ -58,7 +62,8 @@ nav li span {
 
 li a {
    
-    padding:5px;
+    padding:10px;
+    border-radius: 15px;
     background-color: white;
     text-decoration: none;
     box-shadow: 1px 3px 5px rgba(0,0,0, 0.5);
@@ -78,10 +83,11 @@ li a {
    
 }
 
-.container
+.container,
+ .products-container
 {
     display: flex;
-    /* justify-content: space-between; */
+     justify-content: space-around; 
     flex-wrap: wrap;
     margin:50px;
     padding-bottom: 100px;
@@ -90,17 +96,17 @@ li a {
     
     margin: 20px 20px;
     position:relative;
-    width: 20%;
+    width: 75px;
 }
-/* the img and .addcart button need to be same width*/
+
 .image img{
-    height:120px;
-    width: auto;
+    height:90px;
+    width: 100%;
 }
 
 .add-cart {
     position: absolute;
-    width:auto;
+    width:100%;
     background-color: darkgray;
     transition: all 0.3 ease-in-out;
     opacity: 0;
@@ -116,9 +122,12 @@ li a {
 .image:hover .cart4,
 .image:hover .cart5 {
     bottom:50px;
-    opacity: 1;
-    padding:10px;
+    opacity: .8;
+    padding:2px;
     text-decoration: none;
+    color:black;
+    
+
 
 }
 
@@ -131,6 +140,7 @@ li a {
     
 }
 .products-container{
+     display: flex; 
     max-width: 650px ;
     justify-content: space-around;
     margin: 0 auto;
@@ -152,27 +162,43 @@ li a {
     display: flex;
     justify-content: flex-start;
     border-bottom: 4px solid lightgrey;
-    margin: 0 auto;
+     margin: 0 auto; 
 }
 
 .products{
     display: flex;
     /* justify-content: space-between; */
     flex-wrap: wrap;
-    margin:30px;
+    /* margin:30px; */
     padding-bottom: 100px;
 }
 
-.product-title {
-    width: 45%;
+
+
+.priceTop {
+    width:15%;
+     padding-left: 6%;
+    display:flex;
+    align-items: center;
+    
 }
 
 .price {
     width:15%;
-     padding-left: 10px;
+     padding-left: 14px;
     display:flex;
     align-items: center;
-    border-bottom:1px solid lightgrey;
+    border-bottom: 1px solid lightgrey; 
+}
+
+
+
+.quantTop {
+    width:30%;
+     display: flex;
+    align-items: center;
+    padding-left: 5%;
+    
 }
 
 .quantity {
@@ -186,13 +212,23 @@ li a {
 
 .total {
     width:10%;
-     border-bottom: 1px solid lightgrey; 
+    border-bottom: 1px solid lightgrey; 
     display: flex;
     align-items: center;
 }
 
+
+.product span {
+    display: none;
+}
+
+.productTop {
+    width: 20%;
+    padding-left:14%;
+}
+
  .product {
-    width:45%;
+    width:23%;
     display: flex;
     justify-content:space-between ;
      align-items: center; 
@@ -206,12 +242,14 @@ li a {
     display:flex;
     justify-content: flex-end;
     width:100%;
-    padding: 10px 0;
+    padding: 10px 50px;
+   
 
 }
 
 .basketTotalTitle {
-    width:30%;
+    margin-right: 10px;
+    width:50px;
 }
 
 .basketTotal{
@@ -221,5 +259,57 @@ li a {
 
 
 
+
+
+
+@media (max-width: 450px) {
+    nav{
+        height:120px;
+        position: absolute;
+        top:0;
+        right:0;
+        left:0;
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 30px 60px 0 10px;
+    
+    }
+
+    nav ul {
+        margin: 0px auto ;
+    }
+
+    .quantTop {
+      
+        padding-left: 8%;
+        
+    }
+
+    .product{
+        width:110px;
+    }
+
+    .productTop {
+        width: 30%;
+        padding-left:14%;
+    }
+
+    .price {
+        width:20%;
+        
+    }
+
+   
+    
+.product span {
+    display: none;
+}
+
+
+
+
+}
 
 
